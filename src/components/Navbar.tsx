@@ -3,7 +3,6 @@ import {
   AppBar,
   Avatar,
   Box,
-  Button,
   Container,
   Divider,
   Drawer,
@@ -15,6 +14,7 @@ import {
   Typography,
 } from "@mui/material"
 import { FC, useState } from "react"
+import { Link } from "react-router-dom"
 import { NavbarProps } from "./types"
 
 export const Navbar: FC = (props: NavbarProps) => {
@@ -83,15 +83,24 @@ export const Navbar: FC = (props: NavbarProps) => {
             <img src="./logo512.png" alt="no logo" width={32} height={32} />
           </Box>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
+            {navItems.map((item, index) => (
+              <Link
+                to={`/?cat=${item}`}
+                key={index}
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  marginRight: "1rem",
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                }}>
                 {item}
-              </Button>
+              </Link>
             ))}
           </Box>
           <Avatar
             sx={{ bgcolor: "orange", ml: "0.5rem" }}
-            alt="Remy Sharp"
+            alt="Frank"
             src="/broken-image.jpg"
           />
         </Container>
