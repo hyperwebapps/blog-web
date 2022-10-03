@@ -7,3 +7,8 @@ export interface PostPros {
   textOrder: number
   imageOrder: number
 }
+
+export interface MenuProps {
+  anchorEl?: React.MouseEvent<null | HTMLElement>
+  setAnchorEl?: any
+}

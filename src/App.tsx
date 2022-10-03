@@ -1,6 +1,6 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { Homepage, Login, PostAdd, PostPage, Register } from "./pages"
+import { Homepage, Login, PostAdd, PostPage, Profile, Register } from "./pages"
 
 const router = createBrowserRouter([
   {
@@ -22,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/posts/add",
     element: <PostAdd />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
 ])
 
