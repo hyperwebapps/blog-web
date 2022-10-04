@@ -25,12 +25,22 @@ export const Login = () => {
           py: "2rem",
           borderRadius: "1rem",
         }}>
-        <Typography variant="h5" sx={{ flexGrow: 10 }}>Login</Typography>
-        <Link to="/register" style={{ textDecoration: 'none', color: '#233cf6' }}>Sign Up</Link>
+        <Typography variant="h5" sx={{ flexGrow: 10 }}>
+          Login
+        </Typography>
+        <Link
+          to="/register"
+          style={{
+            textDecoration: "none",
+            color: "#233cf6",
+            paddingTop: "0.2rem",
+          }}>
+          Sign Up
+        </Link>
         <TextField
           label="Email or username"
           type="text"
-          sx={{ width: "100%", mt: '2.5rem' }}
+          sx={{ width: "100%", mt: "2.5rem" }}
           size="small"
           required
         />
