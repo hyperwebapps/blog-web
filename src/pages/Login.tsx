@@ -1,4 +1,5 @@
-import { Box, Button, Paper, TextField } from "@mui/material"
+import { Box, Button, Paper, TextField, Typography } from "@mui/material"
+import { Link } from "react-router-dom"
 
 export const Login = () => {
   return (
@@ -13,38 +14,40 @@ export const Login = () => {
         height: "100vh",
       }}>
       <Paper
+        elevation={2}
         variant="outlined"
         sx={{
-          width: "50%",
-          maxWidth: "20rem",
+          width: "100%",
+          maxWidth: "23rem",
           display: "flex",
-          justifyContent: "center",
           flexWrap: "wrap",
           px: "2rem",
-          py: "4rem",
+          py: "2rem",
           borderRadius: "1rem",
         }}>
+        <Typography variant="h5" sx={{ flexGrow: 10 }}>Login</Typography>
+        <Link to="/register" style={{ textDecoration: 'none', color: '#233cf6' }}>Sign Up</Link>
         <TextField
           label="Email or username"
           type="text"
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", mt: '2.5rem' }}
           size="small"
           required
         />
         <TextField
           label="Password"
           type="password"
-          sx={{ width: "100%", mt: "0.7rem", mb: "2rem" }}
+          sx={{ width: "100%", mt: "1rem", mb: "2rem" }}
           size="small"
           required
         />
         <Button
           type="submit"
           sx={{
-            width: "80%",
-            backgroundColor: "#233cf6",
+            width: "100%",
+            backgroundColor: "#050a30",
             "&:hover": {
-              backgroundColor: "#233cf6",
+              backgroundColor: "#050a30",
             },
           }}
           variant="contained"

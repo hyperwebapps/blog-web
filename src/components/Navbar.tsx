@@ -1,4 +1,5 @@
 import { AccountCircleOutlined } from "@mui/icons-material"
+import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from "@mui/icons-material/Logout"
 import MenuIcon from "@mui/icons-material/Menu"
 import PostAddIcon from "@mui/icons-material/PostAdd"
@@ -16,7 +17,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Typography,
+  Typography
 } from "@mui/material"
 import { FC, Fragment, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
@@ -118,16 +119,14 @@ export const Navbar: FC = (props: NavbarProps) => {
             <Link
               to="/login"
               style={{
-                padding: "0.3rem",
                 color: "white",
-                backgroundColor: "#233cf6",
                 textDecoration: "none",
                 marginRight: "1rem",
-                textTransform: "capitalize",
+                marginTop: '0.3rem',
+                textTransform: "uppercase",
                 fontWeight: "bold",
-                borderRadius: "0.5rem",
               }}>
-              login
+              <LoginIcon sx={{ color: 'white', textAlign: 'center' }}/>
             </Link>
             {/* <IconButton
               onClick={handleClick}
