@@ -1,9 +1,13 @@
 import { Box, Button, Typography } from "@mui/material"
 import { FC } from "react"
 import { useNavigate } from "react-router-dom"
-import { PostPros } from "../types"
+import { PostsPros } from "../types"
 
-export const Post: FC<PostPros> = ({ id, imageOrder, textOrder }: PostPros) => {
+export const Post: FC<PostsPros> = ({
+  id,
+  imageOrder,
+  textOrder,
+}: PostsPros) => {
   const navigate = useNavigate()
 
   return (
@@ -49,7 +53,6 @@ export const Post: FC<PostPros> = ({ id, imageOrder, textOrder }: PostPros) => {
           src="https://a0.muscache.com/im/pictures/a22e8b49-9e96-4da9-b5ab-6d7c63d191d6.jpg?im_w=1200"
           alt="no post"
           width="100%"
-          height="100%"
         />
       </Box>
     </Box>

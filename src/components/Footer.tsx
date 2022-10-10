@@ -8,6 +8,7 @@ export const Footer: FC = () => {
 
   return (
     <Box
+      component="div"
       sx={{
         color: "white",
         backgroundColor: "#050a30",
@@ -20,7 +21,7 @@ export const Footer: FC = () => {
           justifyContent: "space-between",
           alignItems: "center",
         }}>
-        <img src="./logo512.png" alt="no logo" width={48} height={48} />
+        <img src="/logo512.png" alt="no logo" width={48} height={48} />
         <Box component="div">&copy; {getYear()} Made By vincecommerce</Box>
       </Container>
     </Box>

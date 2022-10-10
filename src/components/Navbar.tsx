@@ -98,7 +98,7 @@ export const Navbar: FC = (props: NavbarProps) => {
                 flexGrow: { xs: 0, sm: 1 },
                 display: { xs: "none", sm: "block" },
               }}>
-              <img src="./logo512.png" alt="no logo" width={32} height={32} />
+              <img src="/logo512.png" alt="no logo" width={32} height={32} />
             </Box>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               {navItems.map((item, index) => (

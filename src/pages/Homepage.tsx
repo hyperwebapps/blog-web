@@ -1,9 +1,9 @@
-import { Box, Container, Toolbar } from "@mui/material"
+import { Container, Toolbar } from "@mui/material"
 import { FC } from "react"
-import { Footer, Navbar, Post, PostPros } from "../components"
+import { Footer, Navbar, Post, PostsPros } from "../components"
 
 export const Homepage: FC = () => {
-  const posts: PostPros[] = [
+  const posts: PostsPros[] = [
     {
       id: 1,
       textOrder: 1,
@@ -21,17 +21,17 @@ export const Homepage: FC = () => {
     },
   ]
   return (
-    <Box>
+    <>
       <Navbar />
       <Toolbar />
       <Container
         maxWidth="lg"
         sx={{ display: "flex", flexWrap: "wrap", my: "4rem" }}>
         {posts.map((post) => (
-          <Post {...post} />
+          <Post {...post} key={post.id} />
         ))}
       </Container>
       <Footer />
-    </Box>
+    </>
   )
 }
