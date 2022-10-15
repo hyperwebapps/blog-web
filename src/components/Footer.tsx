@@ -22,7 +22,7 @@ export const Footer: FC = () => {
           alignItems: "center",
         }}>
         <img src="/logo512.png" alt="no logo" width={48} height={48} />
-        <Box component="div">&copy; {getYear()} Made By vincecommerce</Box>
+        <Box component="div">&copy; {getYear()} Made by VinceCommerce</Box>
       </Container>
     </Box>
   )

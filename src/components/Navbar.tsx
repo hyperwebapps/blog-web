@@ -53,6 +53,11 @@ export const Navbar: FC = (props: NavbarProps) => {
     setAnchorEl(null)
   }
 
+  const logout = () => {
+    setAuth(() => false)
+    navigate("/")
+  }
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -60,8 +65,11 @@ export const Navbar: FC = (props: NavbarProps) => {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
+        {navItems.map((item, index) => (
+          <ListItem
+            key={index}
+            disablePadding
+            onClick={() => navigate(`/?cat=${item}`)}>
             <ListItemButton
               sx={{ textAlign: "center", textTransform: "capitalize" }}>
               <ListItemText primary={item} />
@@ -128,7 +136,7 @@ export const Navbar: FC = (props: NavbarProps) => {
                 <Avatar
                   sx={{ bgcolor: "#233cf6", ml: "0.5rem" }}
                   alt="Frank"
-                  src="/broken-image.jpg"
+                  src="https://i.seadn.io/gae/ZRh9NK6LE7t8RKo4D4DqyvP-mAyUO6GWw45N2mDUR1W-UmElMwANOowVNdtwDzAr8f7x7_SYWh9CWOD_D4Zdc7IDgl5puZt6Zc8M?auto=format&w=1000"
                 />
               </IconButton>
             ) : (
@@ -213,7 +221,7 @@ export const Navbar: FC = (props: NavbarProps) => {
           </ListItemIcon>
           Write a post
         </MenuItem>
-        <MenuItem onClick={() => setAuth((prev) => !prev)}>
+        <MenuItem onClick={logout}>
           <ListItemIcon>
             <LogoutIcon fontSize="medium" />
           </ListItemIcon>

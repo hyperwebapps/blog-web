@@ -4,27 +4,25 @@ import { CreationBox } from "../components/posts"
 
 export const PostAdd = () => {
   return (
-    <>
-      <Box
-        component="div"
+    <Box
+      component="div"
+      sx={{
+        display: "grid",
+        gridTemplateRows: "auto auto 1fr",
+        minHeight: "100vh",
+      }}>
+      <Navbar />
+      <Toolbar />
+      <Container
+        maxWidth="lg"
         sx={{
-          display: "grid",
-          gridTemplateRows: "auto auto 1fr",
-          minHeight: "100vh",
+          display: "flex",
+          flexWrap: "wrap",
+          my: "5rem",
         }}>
-        <Navbar />
-        <Toolbar />
-        <Container
-          maxWidth="lg"
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            my: "5rem",
-          }}>
-          <CreationBox />
-        </Container>
-        <Footer />
-      </Box>
-    </>
+        <CreationBox />
+      </Container>
+      <Footer />
+    </Box>
   )
 }

@@ -35,19 +35,32 @@ export const Login = () => {
             color: "#233cf6",
             paddingTop: "0.2rem",
           }}>
-          Sign Up
+          Create account
         </Link>
         <TextField
           label="Email or username"
           type="text"
-          sx={{ width: "100%", mt: "2.5rem" }}
+          sx={{
+            width: "100%",
+            mt: "2.5rem",
+            "&.Mui-focused fieldset": {
+              borderColor: "#233cf6",
+            },
+          }}
           size="small"
           required
         />
         <TextField
           label="Password"
           type="password"
-          sx={{ width: "100%", mt: "1rem", mb: "2rem" }}
+          sx={{
+            width: "100%",
+            mt: "1rem",
+            mb: "2rem",
+            "&.Mui-focused fieldset": {
+              borderColor: "#233cf6",
+            },
+          }}
           size="small"
           required
         />

@@ -45,6 +45,7 @@ export const CreationBox = () => {
         justifyContent: "space-between",
         flexWrap: "wrap",
         width: "100%",
+        px: "1rem",
       }}
       component="div">
       <Stack
@@ -56,7 +57,12 @@ export const CreationBox = () => {
           placeholder="Enter a title for the post"
           variant="outlined"
           size="small"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            "&.Mui-focused fieldset": {
+              borderColor: "#233cf6",
+            },
+          }}
         />
         <Box sx={{ width: "100%" }} component="div">
           <ReactQuill
@@ -109,7 +115,14 @@ export const CreationBox = () => {
               <Button
                 variant="contained"
                 disableElevation
-                sx={{ bgcolor: "#233cf6" }}>
+                sx={{
+                  bgcolor: "#233cf6",
+                  "&:hover": {
+                    backgroundColor: "#233cf6",
+                    borderColor: "#233cf6",
+                    boxShadow: "none",
+                  },
+                }}>
                 Publish
               </Button>
             </Stack>
