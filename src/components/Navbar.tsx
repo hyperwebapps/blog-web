@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu"
 import PostAddIcon from "@mui/icons-material/PostAdd"
 import {
   AppBar,
+  Avatar,
   Box,
   Container,
   Divider,
@@ -29,6 +30,7 @@ export const Navbar: FC = (props: NavbarProps) => {
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [isAuth, setAuth] = useState(true)
   const open = Boolean(anchorEl)
   const navItems: string[] = [
     "art",
@@ -43,9 +45,9 @@ export const Navbar: FC = (props: NavbarProps) => {
     setMobileOpen(!mobileOpen)
   }
 
-  // const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget)
-  // }
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
     setAnchorEl(null)
@@ -116,30 +118,33 @@ export const Navbar: FC = (props: NavbarProps) => {
                 </Link>
               ))}
             </Box>
-            <Link
-              to="/login"
-              style={{
-                color: "white",
-                textDecoration: "none",
-                marginRight: "1rem",
-                marginTop: "0.3rem",
-                textTransform: "uppercase",
-                fontWeight: "bold",
-              }}>
-              <LoginIcon sx={{ color: "white", textAlign: "center" }} />
-            </Link>
-            {/* <IconButton
-              onClick={handleClick}
-              size="small"
-              aria-controls={open ? "account-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}>
-              <Avatar
-                sx={{ bgcolor: "orange", ml: "0.5rem" }}
-                alt="Frank"
-                src="/broken-image.jpg"
-              />
-            </IconButton> */}
+            {isAuth ? (
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}>
+                <Avatar
+                  sx={{ bgcolor: "#233cf6", ml: "0.5rem" }}
+                  alt="Frank"
+                  src="/broken-image.jpg"
+                />
+              </IconButton>
+            ) : (
+              <Link
+                to="/login"
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  marginRight: "1rem",
+                  marginTop: "0.3rem",
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                }}>
+                <LoginIcon sx={{ color: "white", textAlign: "center" }} />
+              </Link>
+            )}
           </Container>
         </AppBar>
         <Box component="nav">
@@ -208,7 +213,7 @@ export const Navbar: FC = (props: NavbarProps) => {
           </ListItemIcon>
           Write a post
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => setAuth((prev) => !prev)}>
           <ListItemIcon>
             <LogoutIcon fontSize="medium" />
           </ListItemIcon>

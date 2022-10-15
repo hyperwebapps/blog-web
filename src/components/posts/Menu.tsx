@@ -7,17 +7,17 @@ import { MenuItem } from "./MenuItem"
 export const Menu: FC = () => {
   const menuItems: MenuContentProps[] = [
     {
-      link: "/post/2",
+      link: "/posts/2",
       img: "https://images.pexels.com/photos/5421530/pexels-photo-5421530.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
       title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
     },
     {
-      link: "/post/2",
+      link: "/posts/2",
       img: "https://images.pexels.com/photos/5421530/pexels-photo-5421530.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
       title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
     },
     {
-      link: "/post/2",
+      link: "/posts/2",
       img: "https://images.pexels.com/photos/5421530/pexels-photo-5421530.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
       title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
     },
