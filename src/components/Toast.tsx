@@ -13,9 +13,9 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 export const Toast: FC<ToastProps> = ({ message }: ToastProps) => {
   const [open, setOpen] = useState(false)
 
-  const handleClick = () => {
-    setOpen(true)
-  }
+  // const handleClick = () => {
+  //   setOpen(true)
+  // }
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
