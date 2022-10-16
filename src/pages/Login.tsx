@@ -14,7 +14,6 @@ export const Login = () => {
         height: "100vh",
       }}>
       <Paper
-        elevation={2}
         variant="outlined"
         sx={{
           width: "100%",

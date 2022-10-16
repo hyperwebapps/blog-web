@@ -26,3 +26,7 @@ export interface MenuContentProps {
   img: string
   title: string
 }
+
+export interface ToastProps {
+  message: string
+}
