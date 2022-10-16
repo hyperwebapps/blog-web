@@ -1,0 +1,6 @@
+export * from "./Homepage"
+export * from "./Login"
+export * from "./PostAdd"
+export * from "./PostPage"
+export * from "./Profile"
+export * from "./Register"
