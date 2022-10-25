@@ -1,7 +1,40 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material"
-import { Link } from "react-router-dom"
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { ChangeEvent, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import app from "../config"
+import { ILogin } from "../context/types"
 
 export const Login = () => {
+  const auth = getAuth(app)
+  const navigate = useNavigate()
+  const [credentials, setCredentials] = useState<ILogin>({
+    email: "",
+    password: "",
+  })
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setCredentials((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }))
+  }
+
+  const handleLogin = async (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        credentials.email,
+        credentials.password
+      )
+      navigate("/")
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
   return (
     <Box
       component="form"
@@ -12,7 +45,8 @@ export const Login = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-      }}>
+      }}
+      onSubmit={handleLogin}>
       <Paper
         variant="outlined"
         sx={{
@@ -37,7 +71,8 @@ export const Login = () => {
           Create account
         </Link>
         <TextField
-          label="Email or username"
+          label="Email"
+          name="email"
           type="text"
           sx={{
             width: "100%",
@@ -47,10 +82,12 @@ export const Login = () => {
             },
           }}
           size="small"
+          onChange={handleChange}
           required
         />
         <TextField
           label="Password"
+          name="password"
           type="password"
           sx={{
             width: "100%",
@@ -61,6 +98,7 @@ export const Login = () => {
             },
           }}
           size="small"
+          onChange={handleChange}
           required
         />
         <Button

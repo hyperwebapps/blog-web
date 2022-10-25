@@ -1,7 +1,59 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material"
-import { Link } from "react-router-dom"
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth"
+import { doc, getFirestore, setDoc } from "firebase/firestore"
+import { getDownloadURL, getStorage, ref } from "firebase/storage"
+import { ChangeEvent, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import app from "../config"
+import { IRegister } from "../context/types"
 
 export const Register = () => {
+  const auth = getAuth(app)
+  const storage = getStorage(app)
+  const db = getFirestore(app)
+  const navigate = useNavigate()
+
+  const [user, setUser] = useState<IRegister>({
+    email: "",
+    username: "",
+    password: "",
+  })
+
+  const handleRegistration = async (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    try {
+      await createUserWithEmailAndPassword(auth, user.email, user.password)
+      const url = await getDownloadURL(ref(storage, "avatar.png"))
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName: user.username,
+          photoURL: url,
+        })
+        await setDoc(doc(db, "users", auth.currentUser.uid), {
+          avatarUrl: url,
+          username: user.username,
+        })
+      } else {
+        throw new Error("Something is gone wrong")
+      }
+      navigate("/")
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUser((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }))
+  }
+
   return (
     <Box
       component="form"
@@ -12,7 +64,8 @@ export const Register = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-      }}>
+      }}
+      onSubmit={handleRegistration}>
       <Paper
         variant="outlined"
         sx={{
@@ -38,6 +91,7 @@ export const Register = () => {
         </Link>
         <TextField
           label="Email"
+          name="email"
           type="email"
           sx={{
             width: "100%",
@@ -47,10 +101,12 @@ export const Register = () => {
             },
           }}
           size="small"
+          onChange={handleChange}
           required
         />
         <TextField
           label="Username"
+          name="username"
           type="text"
           sx={{
             width: "100%",
@@ -60,10 +116,12 @@ export const Register = () => {
             },
           }}
           size="small"
+          onChange={handleChange}
           required
         />
         <TextField
           label="Password"
+          name="password"
           type="password"
           sx={{
             width: "100%",
@@ -74,6 +132,7 @@ export const Register = () => {
             },
           }}
           size="small"
+          onChange={handleChange}
           required
         />
         <Button

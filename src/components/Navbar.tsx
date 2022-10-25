@@ -20,18 +20,19 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material"
+import { getAuth } from "firebase/auth"
 import { FC, Fragment, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import app from "../config"
+import { getUserAvatar } from "../utils"
 import { NavbarProps } from "./types"
 
 export const Navbar: FC = (props: NavbarProps) => {
   const drawerWidth = 240
   const { window } = props
+  const auth = getAuth(app)
+  const user = auth.currentUser
   const navigate = useNavigate()
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [isAuth, setAuth] = useState(true)
-  const open = Boolean(anchorEl)
   const navItems: string[] = [
     "art",
     "science",
@@ -40,6 +41,10 @@ export const Navbar: FC = (props: NavbarProps) => {
     "design",
     "food",
   ]
+
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -54,7 +59,7 @@ export const Navbar: FC = (props: NavbarProps) => {
   }
 
   const logout = () => {
-    setAuth(() => false)
+    auth.signOut()
     navigate("/")
   }
 
@@ -126,7 +131,7 @@ export const Navbar: FC = (props: NavbarProps) => {
                 </Link>
               ))}
             </Box>
-            {isAuth ? (
+            {user ? (
               <IconButton
                 onClick={handleClick}
                 size="small"
@@ -136,7 +141,7 @@ export const Navbar: FC = (props: NavbarProps) => {
                 <Avatar
                   sx={{ bgcolor: "#233cf6", ml: "0.5rem" }}
                   alt="Frank"
-                  src="https://i.seadn.io/gae/ZRh9NK6LE7t8RKo4D4DqyvP-mAyUO6GWw45N2mDUR1W-UmElMwANOowVNdtwDzAr8f7x7_SYWh9CWOD_D4Zdc7IDgl5puZt6Zc8M?auto=format&w=1000"
+                  src={getUserAvatar(auth)}
                 />
               </IconButton>
             ) : (

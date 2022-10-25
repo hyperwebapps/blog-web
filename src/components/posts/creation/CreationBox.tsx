@@ -12,11 +12,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import { useState } from "react"
+import { addDoc, collection, getFirestore } from "firebase/firestore"
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
+import { ChangeEvent, useState } from "react"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import app from "../../../config"
+import { PostContentProps } from "../../types"
 
 export const CreationBox = () => {
+  const storage = getStorage(app)
+  const db = getFirestore(app)
+  const navigate = useNavigate()
   const categories: string[] = [
     "art",
     "science",
@@ -25,35 +34,81 @@ export const CreationBox = () => {
     "design",
     "food",
   ]
-  const [selectedValue, setSelectedValue] = useState("art")
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(event.target.value)
+  const [imageUrl, setImageUrl] = useState<string>("")
+
+  const [post, setPost] = useState<PostContentProps>({
+    img: "",
+    title: "",
+    postDate: new Date().toLocaleDateString("en-GB"),
+    description: "",
+    category: "",
+    status: "draft",
+    visibility: "private",
+  })
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPost((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }))
+  }
+
+  const handleFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      await uploadBytes(
+        ref(storage, `posts/${event.target.files[0].name}`),
+        event.target.files[0]
+      )
+      const url = await getDownloadURL(
+        ref(storage, `posts/${event.target.files[0].name}`)
+      )
+      setImageUrl(() => url)
+    } else {
+      toast.error("Image upload gone wrong")
+    }
+  }
+
+  const publishPost = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "posts"), {
+        ...post,
+        img: imageUrl,
+        status: "created",
+        visibility: "public",
+      })
+      toast.success(`Post ${docRef.id} has been created`)
+      navigate(`/posts/${docRef.id}`)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
   }
 
   const controlProps = (item: string) => ({
-    checked: selectedValue === item,
+    checked: post.category === item,
     onChange: handleChange,
     value: item,
+    name: "category",
     inputProps: { "aria-label": item },
   })
 
   return (
     <Box
+      component="form"
       sx={{
         display: "flex",
         justifyContent: "space-between",
         flexWrap: "wrap",
         width: "100%",
         px: "1rem",
-      }}
-      component="div">
+      }}>
       <Stack
         spacing={3}
         sx={{ width: { xs: "100%", md: "65%" }, mb: { xs: "6rem", md: 0 } }}
         component="div">
         <TextField
           label="Title"
+          name="title"
           placeholder="Enter a title for the post"
           variant="outlined"
           size="small"
@@ -63,11 +118,18 @@ export const CreationBox = () => {
               borderColor: "#233cf6",
             },
           }}
+          onChange={handleChange}
         />
         <Box sx={{ width: "100%" }} component="div">
           <ReactQuill
             theme="snow"
             style={{ width: "100%", height: "35.2vh" }}
+            onChange={(value) =>
+              setPost((prev) => ({
+                ...prev,
+                description: value,
+              }))
+            }
           />
         </Box>
       </Stack>
@@ -106,13 +168,21 @@ export const CreationBox = () => {
                 sx={{ color: "#233cf6" }}
                 aria-label="upload picture"
                 component="label">
-                <input hidden accept="image/*" type="file" />
+                <input
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={handleFile}
+                />
                 <PhotoCamera />
               </IconButton>
             </Box>
             <Stack direction="row" justifyContent="space-between" width="100%">
-              <Button sx={{ color: "#233cf6" }}>Save as draft</Button>
+              <Button type="submit" sx={{ color: "#233cf6" }}>
+                Save as draft
+              </Button>
               <Button
+                type="button"
                 variant="contained"
                 disableElevation
                 sx={{
@@ -122,7 +192,8 @@ export const CreationBox = () => {
                     borderColor: "#233cf6",
                     boxShadow: "none",
                   },
-                }}>
+                }}
+                onClick={() => publishPost()}>
                 Publish
               </Button>
             </Stack>

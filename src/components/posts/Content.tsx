@@ -3,12 +3,15 @@ import EditIcon from "@mui/icons-material/Edit"
 import { Box, Typography } from "@mui/material"
 import Avatar from "@mui/material/Avatar"
 import * as DOMPurify from "dompurify"
+import { getAuth } from "firebase/auth"
 import moment from "moment"
-import { FC, useState } from "react"
+import { FC } from "react"
+import app from "../../config"
 import { PostContentProps } from "../types"
 
 export const Content: FC<PostContentProps> = (props: PostContentProps) => {
-  const [isAuth] = useState(true)
+  const auth = getAuth(app)
+  const user = auth.currentUser
 
   const cleanHtml = DOMPurify.sanitize(props.description, {
     USE_PROFILES: { html: true },
@@ -46,7 +49,7 @@ export const Content: FC<PostContentProps> = (props: PostContentProps) => {
             {moment(props.postDate, "mm/dd/yyyy").fromNow()}
           </Box>
         </Box>
-        {isAuth && (
+        {user && (
           <Box component="span">
             <Box component="span" onClick={() => console.log("Edited Post")}>
               <EditIcon sx={{ color: "orange", mx: "0.4rem" }} />

@@ -14,11 +14,13 @@ export interface MenuProps {
 }
 
 export interface PostContentProps {
-  id: number
   img: string
   title: string
   postDate: string
   description: string
+  category: string
+  status: string
+  visibility: string
 }
 
 export interface MenuContentProps {

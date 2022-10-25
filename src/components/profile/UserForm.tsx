@@ -1,7 +1,12 @@
 import { Avatar, Box, Button, Stack, TextField } from "@mui/material"
 import { amber } from "@mui/material/colors"
+import { getAuth } from "firebase/auth"
+import app from "../../config"
+import { getUserAvatar } from "../../utils"
 
 export const UserForm = () => {
+  const auth = getAuth(app)
+
   return (
     <Box
       sx={{
@@ -26,7 +31,7 @@ export const UserForm = () => {
               height: 64,
             }}
             alt="Frank"
-            src="https://i.seadn.io/gae/ZRh9NK6LE7t8RKo4D4DqyvP-mAyUO6GWw45N2mDUR1W-UmElMwANOowVNdtwDzAr8f7x7_SYWh9CWOD_D4Zdc7IDgl5puZt6Zc8M?auto=format&w=1000"
+            src={getUserAvatar(auth)}
           />
           <Button variant="contained" component="label" disableElevation>
             Upload
@@ -40,7 +45,7 @@ export const UserForm = () => {
         </Stack>
         <TextField
           label="Email"
-          defaultValue="hello@gmail.com"
+          name="email"
           size="small"
           placeholder="Enter a new email"
           sx={{
@@ -52,7 +57,7 @@ export const UserForm = () => {
         />
         <TextField
           label="Username"
-          defaultValue="theWriter"
+          name="displayName"
           size="small"
           placeholder="Enter a new username"
           sx={{
@@ -64,6 +69,7 @@ export const UserForm = () => {
         />
         <TextField
           label="Password"
+          name="password"
           size="small"
           placeholder="Enter a new password"
           sx={{
@@ -75,6 +81,7 @@ export const UserForm = () => {
         />
         <TextField
           label="Confirm Password"
+          name="confirmPassword"
           size="small"
           placeholder="Confirm the new password"
           sx={{
