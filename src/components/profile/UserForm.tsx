@@ -1,21 +1,30 @@
 import { Avatar, Box, Button, Stack, TextField } from "@mui/material"
 import { amber } from "@mui/material/colors"
 import { getAuth } from "firebase/auth"
+import { ChangeEvent } from "react"
+import { toast } from "react-toastify"
 import app from "../../config"
 import { getUserAvatar } from "../../utils"
 
 export const UserForm = () => {
   const auth = getAuth(app)
 
+  const editUser = async (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    toast.error("Profile update not enabled")
+  }
+
   return (
     <Box
+      component="form"
       sx={{
         display: "flex",
         justifyContent: "space-between",
         flexWrap: "wrap",
         width: "100%",
         px: "1rem",
-      }}>
+      }}
+      onSubmit={editUser}>
       <Stack
         direction="column"
         justifyContent="flex-start"
@@ -47,6 +56,7 @@ export const UserForm = () => {
           label="Email"
           name="email"
           size="small"
+          value={auth.currentUser?.email}
           placeholder="Enter a new email"
           sx={{
             width: { xs: "100%", md: "40%" },
@@ -59,6 +69,7 @@ export const UserForm = () => {
           label="Username"
           name="displayName"
           size="small"
+          value={auth.currentUser?.displayName}
           placeholder="Enter a new username"
           sx={{
             width: { xs: "100%", md: "40%" },
@@ -93,8 +104,8 @@ export const UserForm = () => {
         />
         <Button
           variant="contained"
-          component="label"
           disableElevation
+          type="submit"
           sx={{
             bgcolor: amber[800],
             "&:hover": {

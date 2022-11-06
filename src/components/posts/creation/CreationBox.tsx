@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import { getAuth } from "firebase/auth"
 import { addDoc, collection, getFirestore } from "firebase/firestore"
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
 import { ChangeEvent, useState } from "react"
@@ -23,6 +24,7 @@ import app from "../../../config"
 import { PostContentProps } from "../../types"
 
 export const CreationBox = () => {
+  const auth = getAuth(app)
   const storage = getStorage(app)
   const db = getFirestore(app)
   const navigate = useNavigate()
@@ -45,6 +47,9 @@ export const CreationBox = () => {
     category: "",
     status: "draft",
     visibility: "private",
+    author: "",
+    avatarUrl: "",
+    username: "",
   })
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -69,16 +74,30 @@ export const CreationBox = () => {
     }
   }
 
-  const publishPost = async () => {
+  const createPost = async (isDraft: boolean) => {
     try {
-      const docRef = await addDoc(collection(db, "posts"), {
-        ...post,
-        img: imageUrl,
-        status: "created",
-        visibility: "public",
-      })
-      toast.success(`Post ${docRef.id} has been created`)
-      navigate(`/posts/${docRef.id}`)
+      if (post.category === "") throw new Error("A category must be selected")
+      if (imageUrl === "") throw new Error("A photo must be added")
+      delete post.avatarUrl
+      delete post.username
+      await addDoc(
+        collection(db, "posts"),
+        isDraft
+          ? {
+              ...post,
+              img: imageUrl,
+              author: auth.currentUser?.uid,
+            }
+          : {
+              ...post,
+              img: imageUrl,
+              status: "created",
+              visibility: "public",
+              author: auth.currentUser?.uid,
+            }
+      )
+      toast.success(`Post has been created`)
+      navigate(`/`)
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -178,7 +197,10 @@ export const CreationBox = () => {
               </IconButton>
             </Box>
             <Stack direction="row" justifyContent="space-between" width="100%">
-              <Button type="submit" sx={{ color: "#233cf6" }}>
+              <Button
+                type="button"
+                sx={{ color: "#233cf6" }}
+                onClick={() => createPost(true)}>
                 Save as draft
               </Button>
               <Button
@@ -193,7 +215,7 @@ export const CreationBox = () => {
                     boxShadow: "none",
                   },
                 }}
-                onClick={() => publishPost()}>
+                onClick={() => createPost(false)}>
                 Publish
               </Button>
             </Stack>

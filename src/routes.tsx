@@ -1,5 +1,13 @@
 import { createBrowserRouter } from "react-router-dom"
-import { Homepage, Login, PostAdd, PostPage, Profile, Register } from "./pages"
+import {
+  Homepage,
+  Login,
+  PostAdd,
+  PostEdit,
+  PostPage,
+  Profile,
+  Register,
+} from "./pages"
 
 export const router = createBrowserRouter([
   {
@@ -25,5 +33,9 @@ export const router = createBrowserRouter([
   {
     path: "/profile",
     element: <Profile />,
+  },
+  {
+    path: "/posts/edit/:postId",
+    element: <PostEdit />,
   },
 ])

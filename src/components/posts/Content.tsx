@@ -4,18 +4,34 @@ import { Box, Typography } from "@mui/material"
 import Avatar from "@mui/material/Avatar"
 import * as DOMPurify from "dompurify"
 import { getAuth } from "firebase/auth"
+import { deleteDoc, doc, getFirestore } from "firebase/firestore"
 import moment from "moment"
 import { FC } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import app from "../../config"
 import { PostContentProps } from "../types"
 
 export const Content: FC<PostContentProps> = (props: PostContentProps) => {
+  const { postId } = useParams()
   const auth = getAuth(app)
+  const db = getFirestore(app)
+  const navigate = useNavigate()
   const user = auth.currentUser
 
   const cleanHtml = DOMPurify.sanitize(props.description, {
     USE_PROFILES: { html: true },
   })
+
+  const splitDate = (date: string): string[] => {
+    return date.split("/")
+  }
+
+  const deletePost = async () => {
+    if (postId) {
+      await deleteDoc(doc(db, "posts", postId))
+      navigate("/")
+    }
+  }
 
   return (
     <Box
@@ -40,21 +56,31 @@ export const Content: FC<PostContentProps> = (props: PostContentProps) => {
         }}>
         <Avatar
           alt="user profile"
-          src="https://mui.com/static/images/avatar/1.jpg"
+          src={props.avatarUrl}
           sx={{ width: 52, height: 52 }}
         />
         <Box mx="0.5rem">
-          <Box component="span">iliveintheworld</Box>
+          <Box component="span">{props.username}</Box>
           <Box component="div" fontWeight="500">
-            {moment(props.postDate, "mm/dd/yyyy").fromNow()}
+            {moment([
+              splitDate(props.postDate)[2],
+              splitDate(props.postDate)[1],
+              splitDate(props.postDate)[0],
+            ]).fromNow()}
           </Box>
         </Box>
-        {user && (
+        {props.username === user?.displayName && (
           <Box component="span">
-            <Box component="span" onClick={() => console.log("Edited Post")}>
+            <Box
+              component="span"
+              sx={{ cursor: "pointer" }}
+              onClick={() => navigate(`/posts/edit/${postId}`)}>
               <EditIcon sx={{ color: "orange", mx: "0.4rem" }} />
             </Box>
-            <Box component="span" onClick={() => console.log("Deleted Post")}>
+            <Box
+              component="span"
+              sx={{ cursor: "pointer" }}
+              onClick={deletePost}>
               <DeleteIcon sx={{ color: "red" }} />
             </Box>
           </Box>
@@ -66,7 +92,10 @@ export const Content: FC<PostContentProps> = (props: PostContentProps) => {
           {props.title}
         </Typography>
       </Box>
-      <Typography sx={{ mt: "0.4rem" }}>{cleanHtml}</Typography>
+      <Typography
+        sx={{ mt: "0.4rem" }}
+        dangerouslySetInnerHTML={{ __html: cleanHtml }}
+      />
     </Box>
   )
 }

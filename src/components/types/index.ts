@@ -2,10 +2,9 @@ export interface NavbarProps {
   window?: () => Window
 }
 
-export interface PostsPros {
-  id: number
-  textOrder: number
-  imageOrder: number
+export interface PostsProps {
+  textOrder?: number
+  imageOrder?: number
 }
 
 export interface MenuProps {
@@ -13,7 +12,12 @@ export interface MenuProps {
   setAnchorEl?: any
 }
 
-export interface PostContentProps {
+export interface PostAuthorProps {
+  avatarUrl?: string
+  username?: string
+}
+
+export interface PostContentProps extends PostAuthorProps {
   img: string
   title: string
   postDate: string
@@ -21,12 +25,14 @@ export interface PostContentProps {
   category: string
   status: string
   visibility: string
+  author: string
 }
 
-export interface MenuContentProps {
+export interface MenuContentProps extends PostsProps {
   link: string
   img: string
   title: string
+  postDate: string
 }
 
 export interface ToastProps {

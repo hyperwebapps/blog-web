@@ -1,20 +1,99 @@
-import { Box, Container, Toolbar } from "@mui/material"
-import { useState } from "react"
+import { Box, CircularProgress, Container, Toolbar } from "@mui/material"
+import {
+  collection,
+  doc,
+  documentId,
+  getDoc,
+  getDocs,
+  getFirestore,
+  limit,
+  query,
+  where,
+} from "firebase/firestore"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { toast } from "react-toastify"
 import { Footer, Navbar } from "../components"
 import { Content, Menu } from "../components/posts"
-import { PostContentProps } from "../components/types"
+import {
+  MenuContentProps,
+  PostAuthorProps,
+  PostContentProps,
+} from "../components/types"
+import app from "../config"
 
 export const PostPage = () => {
-  const [post] = useState<PostContentProps>({
-    img: "https://a0.muscache.com/im/pictures/a22e8b49-9e96-4da9-b5ab-6d7c63d191d6.jpg?im_w=1200",
-    title: "Jabbersphere",
-    postDate: "10/10/2020",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Posuere ac ut consequat semper viverra. Gravida quis blandit turpis cursus in hac habitasse platea dictumst. Sit amet nisl suscipit adipiscing. Cras sed felis eget velit. Semper quis lectus nulla at volutpat diam ut venenatis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Tristique magna sit amet purus gravida. Senectus et netus et malesuada fames ac turpis egestas. Tellus at urna condimentum mattis pellentesque id nibh. Aliquet enim tortor at auctor urna nunc. Facilisi morbi tempus iaculis urna id volutpat. Amet nisl purus in mollis nunc sed id. Bibendum enim facilisis gravida neque convallis a cras. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Posuere ac ut consequat semper viverra. Gravida quis blandit turpis cursus in hac habitasse platea dictumst. Sit amet nisl suscipit adipiscing. Cras sed felis eget velit. Semper quis lectus nulla at volutpat diam ut venenatis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Tristique magna sit amet purus gravida. Senectus et netus et malesuada fames ac turpis egestas. Tellus at urna condimentum mattis pellentesque id nibh. Aliquet enim tortor at auctor urna nunc. Facilisi morbi tempus iaculis urna id volutpat. Amet nisl purus in mollis nunc sed id. Bibendum enim facilisis gravida neque convallis a cras. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Posuere ac ut consequat semper viverra. Gravida quis blandit turpis cursus in hac habitasse platea dictumst. Sit amet nisl suscipit adipiscing. Cras sed felis eget velit. Semper quis lectus nulla at volutpat diam ut venenatis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Tristique magna sit amet purus gravida. Senectus et netus et malesuada fames ac turpis egestas. Tellus at urna condimentum mattis pellentesque id nibh. Aliquet enim tortor at auctor urna nunc. Facilisi morbi tempus iaculis urna id volutpat. Amet nisl purus in mollis nunc sed id. Bibendum enim facilisis gravida neque convallis a cras. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Posuere ac ut consequat semper viverra. Gravida quis blandit turpis cursus in hac habitasse platea dictumst. Sit amet nisl suscipit adipiscing. Cras sed felis eget velit. Semper quis lectus nulla at volutpat diam ut venenatis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Tristique magna sit amet purus gravida. Senectus et netus et malesuada fames ac turpis egestas. Tellus at urna condimentum mattis pellentesque id nibh. Aliquet enim tortor at auctor urna nunc. Facilisi morbi tempus iaculis urna id volutpat. Amet nisl purus in mollis nunc sed id. Bibendum enim facilisis gravida neque convallis a cras.",
-    category: "art",
-    status: "draft",
-    visibility: "public",
+  const { postId } = useParams()
+  const db = getFirestore(app)
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [post, setPost] = useState<PostContentProps>({
+    img: "",
+    title: "",
+    postDate: "",
+    description: "",
+    category: "",
+    status: "",
+    visibility: "",
+    author: "",
   })
+
+  const [menuPost, setMenuPost] = useState<MenuContentProps[] | []>([])
+
+  useEffect(() => {
+    const getAuthorData = async (id: string): Promise<PostAuthorProps> => {
+      const docRef = doc(db, "users", id)
+      const docSnap = await getDoc(docRef)
+      if (docSnap.exists()) {
+        const userData = docSnap.data() as PostAuthorProps
+        return userData
+      } else {
+        return {
+          avatarUrl: "",
+          username: "No Data",
+        }
+      }
+    }
+    const getPost = async () => {
+      if (postId) {
+        setIsLoading((prev) => !prev)
+        const docRef = doc(db, "posts", postId)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          const postData = docSnap.data() as PostContentProps
+          const userData = await getAuthorData(postData.author)
+          setPost(() => ({
+            ...postData,
+            ...userData,
+          }))
+          setIsLoading((prev) => !prev)
+        } else {
+          toast.error("No post has been found")
+          navigate("/")
+        }
+      } else {
+        toast.error("Something has gone wrong")
+      }
+    }
+
+    const getMenuPosts = async () => {
+      const q = query(
+        collection(db, "posts"),
+        where(documentId(), "!=", postId),
+        limit(3)
+      )
+      const querySnapshot = (await getDocs(q)).docs
+      const mapped = querySnapshot.map((document) => ({
+        ...document.data(),
+        link: `/posts/${document.id}`,
+      })) as MenuContentProps[]
+      setMenuPost(() => mapped)
+    }
+
+    getPost()
+    getMenuPosts()
+  }, [db, postId, navigate])
 
   return (
     <>
@@ -25,6 +104,7 @@ export const PostPage = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
+          justifyContent: isLoading ? "center" : "none",
           my: "4rem",
         }}>
         <Box
@@ -33,8 +113,16 @@ export const PostPage = () => {
             display: "flex",
             justifyContent: "space-between",
           }}>
-          <Content {...post} />
-          <Menu />
+          {isLoading ? (
+            <Box component="div">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
+              <Content {...post} />
+              <Menu items={menuPost} />
+            </>
+          )}
         </Box>
       </Container>
       <Footer />
