@@ -1,13 +1,12 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { ChangeEvent, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import app from "../config"
+import useBlog from "../context"
 import { ILogin } from "../context/types"
 
 export const Login = () => {
-  const auth = getAuth(app)
+  const { login } = useBlog()
   const navigate = useNavigate()
   const [credentials, setCredentials] = useState<ILogin>({
     email: "",
@@ -24,11 +23,7 @@ export const Login = () => {
   const handleLogin = async (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     try {
-      await signInWithEmailAndPassword(
-        auth,
-        credentials.email,
-        credentials.password
-      )
+      if (login) await login(credentials)
       navigate("/")
     } catch (error: any) {
       toast.error(error.message)

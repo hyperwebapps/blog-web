@@ -24,14 +24,15 @@ import { getAuth } from "firebase/auth"
 import { FC, Fragment, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import app from "../config"
+import useBlog from "../context"
 import { getUserAvatar } from "../utils"
 import { NavbarProps } from "./types"
 
 export const Navbar: FC = (props: NavbarProps) => {
+  const { logout, isAuthenticated } = useBlog()
   const drawerWidth = 240
   const { window } = props
   const auth = getAuth(app)
-  const user = auth.currentUser
   const navigate = useNavigate()
   const navItems: string[] = [
     "art",
@@ -58,8 +59,8 @@ export const Navbar: FC = (props: NavbarProps) => {
     setAnchorEl(null)
   }
 
-  const logout = () => {
-    auth.signOut()
+  const handleLogout = () => {
+    if (logout) logout()
     navigate("/")
   }
 
@@ -131,7 +132,7 @@ export const Navbar: FC = (props: NavbarProps) => {
                 </Link>
               ))}
             </Box>
-            {user ? (
+            {isAuthenticated ? (
               <IconButton
                 onClick={handleClick}
                 size="small"
@@ -226,7 +227,7 @@ export const Navbar: FC = (props: NavbarProps) => {
           </ListItemIcon>
           Write a post
         </MenuItem>
-        <MenuItem onClick={logout}>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon fontSize="medium" />
           </ListItemIcon>

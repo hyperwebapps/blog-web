@@ -11,19 +11,25 @@ import { useNavigate, useParams } from "react-router-dom"
 import app from "../../config"
 import { PostContentProps } from "../types"
 
-export const Content: FC<PostContentProps> = (props: PostContentProps) => {
+export const Content: FC<Partial<PostContentProps>> = (
+  props: Partial<PostContentProps>
+) => {
   const { postId } = useParams()
   const auth = getAuth(app)
   const db = getFirestore(app)
   const navigate = useNavigate()
   const user = auth.currentUser
 
-  const cleanHtml = DOMPurify.sanitize(props.description, {
-    USE_PROFILES: { html: true },
-  })
+  const cleanHtml = DOMPurify.sanitize(
+    props.description ? props.description : "",
+    {
+      USE_PROFILES: { html: true },
+    }
+  )
 
-  const splitDate = (date: string): string[] => {
-    return date.split("/")
+  const splitDate = (date: string | undefined): string[] => {
+    if (date) return date.split("/")
+    return []
   }
 
   const deletePost = async () => {

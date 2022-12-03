@@ -1,3 +1,5 @@
+import { User } from "firebase/auth"
+
 export interface AuthProviderProps {
   children: JSX.Element
 }
@@ -17,4 +19,11 @@ export interface ILogin {
 
 export interface IRegister extends ILogin {
   username: string
+}
+
+export interface IUserState {
+  currentUser: User | null
+  isAuthenticated: boolean
+  login?(cred: ILogin): Promise<void>
+  logout?(): void
 }

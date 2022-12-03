@@ -38,3 +38,11 @@ export interface MenuContentProps extends PostsProps {
 export interface ToastProps {
   message: string
 }
+
+export interface EditUserProps {
+  email: string | null
+  username: string | null
+  password: string
+  confirmPassword: string
+  photoUrl: string
+}

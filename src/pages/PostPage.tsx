@@ -28,16 +28,7 @@ export const PostPage = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
 
-  const [post, setPost] = useState<PostContentProps>({
-    img: "",
-    title: "",
-    postDate: "",
-    description: "",
-    category: "",
-    status: "",
-    visibility: "",
-    author: "",
-  })
+  const [post, setPost] = useState<Partial<PostContentProps>>({})
 
   const [menuPost, setMenuPost] = useState<MenuContentProps[] | []>([])
 
